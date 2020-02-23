@@ -1,6 +1,7 @@
 import requests
 import argparse
 import uuid
+import sys
 from uplink import Consumer, get, post, Path, Query, json, Field
 
 class Nissan(Consumer):
@@ -21,9 +22,11 @@ class Nissan(Consumer):
         print(r.json())
         return r.json()
 
+    ### Information Commands ###
     @get("subscription/accounts/niscust:nis:{accountId}/vehicles/{vin}")
     def getVehicleInfo(self, accountId, vin): pass
 
+    ### Remote Commands ###
     @json
     @post("remote/accounts/niscust:nis:{accountId}/vehicles/{vin}/remote-horn-and-lights")
     def executeHornLightsCommand(self, accountId, command:Field, vin): pass
@@ -35,7 +38,6 @@ class Nissan(Consumer):
     @json
     @post("remote/accounts/niscust:nis:{accountId}/vehicles/{vin}/remote-door")
     def executeDoorCommand(self, accountId, command: Field, vin, pin: Field): pass
-
 
 parser = argparse.ArgumentParser(description='Nissan ConnectServices command line interface.')
 subparsers = parser.add_subparsers(title="commands", dest='command')
@@ -85,6 +87,10 @@ get_vehicle_info_parser = subparsers.add_parser('get_vehicle_info', help='Get in
 get_vehicle_info_parser.add_argument('-u', dest='user', metavar='user', required=True, help='username')
 get_vehicle_info_parser.add_argument('-p', dest='password', metavar='pass', required=True, help='password')
 get_vehicle_info_parser.add_argument('-vin', required=True, help='car VIN')
+
+if len(sys.argv)==1:
+    parser.print_help(sys.stderr)
+    sys.exit(1)
 
 args = parser.parse_args()
 
