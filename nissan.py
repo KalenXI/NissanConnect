@@ -18,7 +18,8 @@ class Nissan(Consumer):
         self.session.headers['CV-AppType'] = "MOBILE"
 
     def login(self, username, password):
-        r = requests.post('https://cvmobile.telematics.net/login/token', headers={'CV-APPID': 'cv.nissan.connect.us.android.25'}, json={'username': username, 'password': password})
+        loginuser = 'NISNNAVCS/' + username
+        r = requests.post('https://mobile.telematics.net/login/token', headers={'CV-APPID': 'cv.nissan.connect.us.android.25'}, json={'username': loginuser, 'password': password})
         print(r.json())
         return r.json()
 
